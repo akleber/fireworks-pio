@@ -33,7 +33,6 @@ void bang();
 // just addLeds multiple times, once for each strip
 void setup()
 {
-  // tell FastLED there's 30 NEOPIXEL leds on pin 10
   FastLED.addLeds<LED_TYPE, LED_PIN1, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
 
   // OTA
@@ -101,6 +100,8 @@ void loop()
   ArduinoOTA.handle();
 
   flare();
+  delay(50);
+  bang();
   explode02();
 
   FastLED.clear();
@@ -111,7 +112,7 @@ void loop()
 
 void flare()
 {
-  float gravity = -.0049; // m/s/s
+  float gravity = -.0050; // m/s/s
   float flarePos = 0;
   float flareVel = 0.70;
   float brightness = 1;
@@ -135,15 +136,17 @@ void flare()
 
 void bang()
 {
-  FastLED.clear();
+  // FastLED.clear();
 
-  for (int i = -3; i <= 3; ++i)
+  const int bangsize = 2;
+
+  for (int i = -bangsize; i < bangsize; ++i)
   {
     leds[FLARE_HIGHT + i] = CHSV(0, 0, 255);
   }
 
   FastLED.show();
-  delay(10);
+  delay(30);
   FastLED.clear();
   FastLED.show();
 }
@@ -151,8 +154,8 @@ void bang()
 void explode02()
 {
   // int nSparks = flarePos / 2; // works out to look about right
-  float flarePos = FLARE_HIGHT + 1;
-  int nSparks = 7;
+  float flarePos = FLARE_HIGHT;
+  int nSparks = 8;
 
   float sparkTime = 255.0;
 
@@ -164,14 +167,15 @@ void explode02()
   for (int i = 0; i < nSparks; i++)
   {
     sparkPos[i] = flarePos;
-    sparkVel[i] = (float(random16(0, 10000)) / 40000.0); // 0 to 1
+    sparkVel[i] = (float(random16(0, 10000)) / 50000.0); // 0 to 1
     sparkCol[i] = constrain(sparkVel[i] * 500, 0, 255);
   }
 
   while (sparkTime > 1.0)
-  { // as long as our known spark is lit, work with all the sparks
+  {
     FastLED.clear();
-    sparkTime *= .95;
+    // sparkTime *= .95;
+    sparkTime -= 1;
     // Serial.print(sparkTime); Serial.print("\n");
 
     for (int i = 0; i < nSparks; i++)
@@ -180,7 +184,14 @@ void explode02()
       sparkPos[i] = constrain(sparkPos[i], 51, NUM_LEDS);
       sparkCol[i] *= .97;
       sparkCol[i] = constrain(sparkCol[i], 0, 255); // red cross dissolve
-      leds[int(sparkPos[i])] = CHSV(hue, 255, 255);
+
+      float brightness = 255;
+      if (sparkTime < 150)
+      {
+        brightness = 255 * sparkTime / 150;
+      }
+
+      leds[int(sparkPos[i])] = CHSV(hue, 255, brightness);
     }
     FastLED.show();
     FastLED.delay(GLOBAL_DELAY);
