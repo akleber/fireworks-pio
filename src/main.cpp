@@ -27,6 +27,7 @@ float sparkCol[NUM_SPARKS];
 
 void flare();
 void explode02();
+void explode03();
 void bang();
 
 // For mirroring strips, all the "special" stuff happens just in setup.  We
@@ -101,7 +102,11 @@ void loop()
 
   flare();
   bang();
-  explode02();
+
+  if (random8() > 30)
+    explode02();
+  else
+    explode03();
 
   FastLED.clear();
   FastLED.show();
@@ -150,6 +155,29 @@ void bang()
   FastLED.show();
 }
 
+void explode03()
+{
+  FastLED.clear();
+
+  const uint8_t max_time = 200;
+
+  for (uint8_t time = 0; time < max_time; time++)
+  {
+    for (uint8_t i = FLARE_HIGHT; i < NUM_LEDS; i++)
+    {
+      uint8_t b = 0;
+      if (random8() > 240)
+      {
+        b = 255.0 * ((float)(max_time - time) / max_time);
+      }
+
+      leds[i] = CHSV(0, 0, b);
+    }
+    FastLED.show();
+    FastLED.delay(20);
+  }
+}
+
 void explode02()
 {
   // int nSparks = flarePos / 2; // works out to look about right
@@ -159,15 +187,18 @@ void explode02()
   float sparkTime = 255.0;
 
   uint8_t hue = random8();
-  Serial.print(hue);
-  Serial.print("\n");
+  // Serial.print(hue);
+  // Serial.print("\n");
+
+  bool colorshift = false;
+  if (random8() > 192) // in about 25% of the explosions do a colorshift
+    colorshift = true;
 
   // initialize sparks
   for (int i = 0; i < nSparks; i++)
   {
     sparkPos[i] = flarePos;
     sparkVel[i] = (float(random16(0, 10000)) / 50000.0); // 0 to 1
-    sparkCol[i] = constrain(sparkVel[i] * 500, 0, 255);
   }
 
   while (sparkTime > 1.0)
@@ -181,8 +212,6 @@ void explode02()
     {
       sparkPos[i] += sparkVel[i];
       sparkPos[i] = constrain(sparkPos[i], 51, NUM_LEDS);
-      sparkCol[i] *= .97;
-      sparkCol[i] = constrain(sparkCol[i], 0, 255); // red cross dissolve
 
       float brightness = 255;
       if (sparkTime < 150)
@@ -190,7 +219,14 @@ void explode02()
         brightness = 255 * sparkTime / 150;
       }
 
-      leds[int(sparkPos[i])] = CHSV(hue, 255, brightness);
+      uint8_t h = hue;
+      if (colorshift)
+      {
+        // shift hue for half a circle
+        h = hue + (255 - sparkTime / 255 * 128);
+      }
+
+      leds[int(sparkPos[i])] = CHSV((uint8_t)h, 255, brightness);
     }
     FastLED.show();
     FastLED.delay(GLOBAL_DELAY);
