@@ -100,7 +100,6 @@ void loop()
   ArduinoOTA.handle();
 
   flare();
-  delay(50);
   bang();
   explode02();
 
@@ -129,7 +128,7 @@ void flare()
     // brightness *= .997;
     // Serial.print(int(flarePos)); Serial.print("\n");
 
-    delay(GLOBAL_DELAY);
+    delay(10);
   }
   // Serial.print("flare end\n");
 }
@@ -146,7 +145,7 @@ void bang()
   }
 
   FastLED.show();
-  delay(30);
+  delay(70);
   FastLED.clear();
   FastLED.show();
 }
