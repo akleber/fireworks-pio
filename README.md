@@ -1,9 +1,7 @@
-# LED Fireworks
-
 ![LED Fireworks teaser](/fireworks-teaser.gif)
 
 This is the documentation and code of my LED firework build at the end of 2022. The idea came from [this video](https://youtu.be/9oAXtgnxZNs).
-The code uses [FastLED](http://fastled.io), started from [Carl Rosendahl](https://www.anirama.com/1000leds/1d-fireworks/) and was then heavily modified and extended by me.
+The code uses [FastLED](http://fastled.io), started from code by [Carl Rosendahl](https://www.anirama.com/1000leds/1d-fireworks/) and was then heavily modified and extended by me.
 I am using [PlatformIO](https://platformio.org) with Visual Studio Code for development.
 For the initial implementation I used [wokwi](https://wokwi.com/projects/349772276028146259) and switched to VS Code for the finetuning with the real hardware.
 
@@ -18,8 +16,3 @@ The mast is made from two 2m wooden sticks and the central streaks "hub" from so
 The total cost was about 170€.
 
 More info and pictures can be found in the [wiki](https://github.com/akleber/fireworks-pio/wiki)
-
-## Possible improvements
-
-* The 6mm Aluminium pipes could be a bit thinner, maybe 5mm or 4mm.
-* The connectors could be waterproof.
