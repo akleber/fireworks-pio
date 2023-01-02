@@ -1,5 +1,7 @@
 ![LED Fireworks teaser](/fireworks-teaser.gif)
 
+[Youtube video from New Year 2023](https://youtu.be/zcFfDueI10Y)
+
 This is the documentation and code of my LED firework build at the end of 2022. The idea came from [this video](https://youtu.be/9oAXtgnxZNs).
 The code uses [FastLED](http://fastled.io), started from code by [Carl Rosendahl](https://www.anirama.com/1000leds/1d-fireworks/) and was then heavily modified and extended by me.
 I am using [PlatformIO](https://platformio.org) with Visual Studio Code for development.
